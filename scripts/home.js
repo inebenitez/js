@@ -17,7 +17,6 @@ function mostrarCards(arr) {
         <div class="card-footer d-flex justify-content-between">
           <span p-1>Price: $${x.price}</span>
           <a href="/details.html?id=${x._id}" class="btn btn-primary btn-dark align-self-end mt-auto stretched-link">Ver mas</a>
-          </footer>
         </div>
       </div>
     </div>
@@ -27,6 +26,7 @@ function mostrarCards(arr) {
 }
 mostrarCards(data.events)
 
+
 //BUSQUEDA
 const searchInput = document.getElementById('search');
 const searchButton = document.getElementById('boton');
@@ -34,7 +34,6 @@ let busqueda = '';
 function filterCards() {
   const cardElements = document.querySelectorAll('.card2');
   cardElements.forEach(kard => {
-    console.log(kard)
     const title = kard.querySelector('h5').innerText.toLowerCase();
     const description = kard.querySelector('p').innerText.toLowerCase();
     if (title.includes(busqueda) || description.includes(busqueda)) {
@@ -46,7 +45,6 @@ function filterCards() {
 }
 searchButton.addEventListener('click', (e) => {
   busqueda = searchInput.value.toLowerCase()
-  console.log(busqueda)
   filterCards()
 });
 searchInput.addEventListener('keypress', (e) => {

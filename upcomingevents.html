@@ -55,41 +55,14 @@
             </div>
         </div>
         <div class="row search justify-content-around align-items-center">
-            <div class="col-12 col-md-9 col-lg-7 col-xl-6 d-flex flex-wrap justify-content-evenly">
-                <div class="form-check">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="Check1" value=""> Category
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="Check2" value=""> Category
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="Check3" value=""> Category
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="Check4" value=""> Category
-                    </label>
-                </div>
-                <div class="form-check">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="Check5" value=""> Category
-                    </label>
-                </div>
+            <div id="categoria" class="col-12 col-md-9 col-lg-7 col-xl-6 d-flex flex-wrap justify-content-evenly">
             </div>
-            <div class="col-12 col-sm-9 col-md-8 col-lg-4 col-cl-3 p-4">
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2 border-dark rounded-0" type="search" placeholder="Search"
-                        aria-label="Search">
-                    <button class="btn btn-outline-secondary text-dark rounded-0 p-1 bg-dark" type="submit">
-                        <img src="./img/search.png" width="25" alt="Search" class="p-0">
-                    </button>
-                </form>
+            <div class="col-12 col-sm-9 col-md-8 col-lg-4 col-cl-3 p-4 d-flex">
+                <input id="search" class="card-filter search form-control me-2 border-dark rounded-0" type="text"
+                    placeholder="Search" aria-label="Search">
+                <button id="boton" class="btn btn-outline-secondary text-dark rounded-0 p-1 bg-dark" type="button">
+                    <img src="./img/search.png" width="25" alt="Search" class="p-0">
+                </button>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-3 g-4 p-3 gridCards" id="card-template">

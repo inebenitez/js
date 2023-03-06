@@ -1,29 +1,21 @@
-let card = document.getElementById("details-tarjeta");
 
-const events = data.events;
-const parametro = new URLSearchParams(window.location.search);
-const x = events.find(x => x._id == parametro.get('evento'));
+let parametro = new URLSearchParams(location.search);
+let evento = data.events.find(evento => evento._id == parametro.get("id"));
 
-function mostrarDetails() {
-    const details = events.map((x) => {
-        return `<div class="contenido">
-    <div class="ladoIzq">
-        <img src="${x.image}" alt="${x.name}"/>
+let container = document.querySelector(".tarjeta")
+container.innerHTML = `<div class="contenido">
+<div class="ladoIzq">
+    <img src="${evento.image}" alt="${evento.name}"/>
+</div>
+<div class="ladoDer text-center">
+    <h2 class="titulo">${evento.name}</h2>
+    <div class="cuerpo text-center">
+        <p>Date: ${evento.date}</p>
+        <p>Description: ${evento.description}</p>
+        <p>Category: ${evento.category}</p>
+        <p>Place: ${evento.place}</p>
+        <p>capacity: ${evento.capacity}</p>
+        <P>Assistance: ${evento.assistance}</p>
+        <p>Price: $${evento.price}</p>
     </div>
-    <div class="ladoDer text-center">
-        <h2 class="titulo">${x.name}</h2>
-        <div class="cuerpo text-center">
-            <p>Date: ${x.date}</p>
-            <p>Description: ${x.description}</p>
-            <p>Category: ${x.category}</p>
-            <p>Place: ${x.place}</p>
-            <p>capacity: ${x.capacity}</p>
-            <P>Assistance: ${x.assistance}</p>
-            <p>Price: $${x.price}</p>
-        </div>
-    </div>
-</div>`;
-    }).join('');
-    card.innerHTML = details;
-}
-mostrarDetails(x)
+</div></div>`
