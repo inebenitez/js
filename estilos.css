@@ -88,6 +88,9 @@ footer{
   object-fit: cover;
 }
 
+.oculto{
+  display: none;
+}
 /*MEDIA*/
 @media (max-width: 892px){
   .btn-area{
