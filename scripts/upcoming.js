@@ -109,10 +109,11 @@ checkboxes.forEach((checkbox) => {
         }
       });
     });
-    //if (eventosFiltrados.length === 0){
-    mostrarCards(categoriasFiltradas)
-    //}else{
-    //mostrarCards(eventosFiltrados)}
-    //if(searchInput.value !== '') filterCards()
+    if(categoriasFiltradas.length > 0){
+      mostrarCards(categoriasFiltradas);
+    } else {
+      mostrarCards(eventosFiltrados);
+    }if(searchInput.value !== '') filterCards()
+    
   })
 })
