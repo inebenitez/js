@@ -26,22 +26,29 @@ function mostrarCards(arr) {
 }
 mostrarCards(data.events)
 
-
 //BUSQUEDA
 const searchInput = document.getElementById('search');
 const searchButton = document.getElementById('boton');
 let busqueda = '';
+
 function filterCards() {
   const cardElements = document.querySelectorAll('.card2');
+  let count = 0;
   cardElements.forEach(kard => {
     const title = kard.querySelector('h5').innerText.toLowerCase();
     const description = kard.querySelector('p').innerText.toLowerCase();
     if (title.includes(busqueda) || description.includes(busqueda)) {
       kard.style.display = 'block';
+      count++;
     } else {
       kard.style.display = 'none';
     }
   });
+  if (count === 0) {
+    const results =
+    `<div class='contenedor p-5 fs-4'><span>No se encontaron resultados</span></div>`
+    card.innerHTML = results;
+  }
 }
 searchButton.addEventListener('click', (e) => {
   busqueda = searchInput.value.toLowerCase()
