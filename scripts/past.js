@@ -1,4 +1,16 @@
-let currentDate = data.currentDate
+fetch('https://mindhub-xj03.onrender.com/api/amazing')
+    .then(response => response.json())
+    .then(data => {
+let currentDate = data.currentDate;
+function filtrarFecha(eventos) {
+  let eventPast = []
+  for (evento of eventos) {
+    if (currentDate > evento.date) {
+      eventPast.push(evento)
+    }
+  }
+  return eventPast
+}
 
 function filtrarFecha(eventos) {
   let eventPast = []
@@ -8,7 +20,7 @@ function filtrarFecha(eventos) {
     }
   }
   return eventPast
-} 
+}
 let categoriasFiltradas = [];
 eventosFiltrados = filtrarFecha(data.events);
 let card = document.getElementById("card-template");
@@ -59,7 +71,7 @@ function filterCards() {
   });
   if (count === 0) {
     const results =
-    `<div class='contenedor p-5 fs-4'><span>No se encontaron resultados</span></div>`
+      `<div class='contenedor p-5 fs-4'><span>No se encontaron resultados</span></div>`
     card.innerHTML = results;
   }
 }
@@ -121,3 +133,5 @@ checkboxes.forEach((checkbox) => {
     } if (searchInput.value !== '') filterCards()
   });
 });
+
+})
