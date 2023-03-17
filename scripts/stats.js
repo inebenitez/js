@@ -6,15 +6,16 @@ const traerData = async () => {
         .then(json => {
             renderStats(json.events)
             renderStats2(json.events)
+            renderStats3(json.events)
         });
 };
 traerData();
 
-//Primer Tabla//
+// PRIMER TABLA ASISTENCIA//
 const renderStats = (events) => {
     // Eventos con el porcentaje de asistencia calculado.
     const eventsPercentage = events.map((evento) => {
-        return { // crea copia del objeto para agregar una propiedad sin modificarlo
+        return { // Crea copia del objeto para agregar una propiedad sin modificarlo
             ...evento, aPercent: (evento.assistance / evento.capacity) * 100,
         };
     });
@@ -39,51 +40,88 @@ const renderStats = (events) => {
     StatsTable.innerHTML = rows.join('');
 };
 
-// Filtros
-const StatsEvents = (data, filtrofecha) => {
-    let eventspastbydate = [];
-    if (filtrofecha === 'upcoming') {
-        eventspastbydate = data.events.filter(evento => evento.date > data.currentDate);
-    } else if (filtrofecha === 'past') {
-        eventspastbydate = data.events.filter(evento => evento.date < data.currentDate);
-    }
-    return eventspastbydate;
-}
-
-// Llamada a la función StatsEvents para obtener los eventos pasados
-const pastEvents = StatsEvents({ events: events, currentDate: new Date() }, 'past');
-
-
-//Segunda Tabla//
+// SEGUNDA TABLA PAST //
 const renderStats2 = (events) => {
     const categories = {};
-
-    // Agrupar eventos por categoría para calcular ingresos y porcentaje de asistencia
+    const currentDate = new Date(); // Obtiene la fecha actual
+    // Agrupa por categoría para calcular ingresos y porcentaje de asistencia
     events.forEach((evento) => {
-        if (evento.category in categories) {
-            categories[evento.category].revenue += evento.price;
-            categories[evento.category].attendance += evento.assistance;
-            categories[evento.category].capacity += evento.capacity;
-        } else {
-            categories[evento.category] = {
-                revenue: evento.price,
-                attendance: evento.assistance,
-                capacity: evento.capacity,
-            };
+        const eventDate = new Date(evento.date); // Obtiene la fecha del evento
+        if (eventDate < currentDate) { // Compara la fecha del evento con la actual
+            if (evento.category in categories) {
+                // Usa [] para acceder a la propiedad del objeto evento.category
+                categories[evento.category].revenue += evento.price * evento.assistance;
+                categories[evento.category].attendance += evento.assistance;
+                categories[evento.category].capacity += evento.capacity;
+                // Agrega el ingreso de cada evento a la categoría que corresponde
+                categories[evento.category].totalRevenue += evento.price * evento.assistance; 
+            } else {
+                categories[evento.category] = {
+                    revenue: evento.price * evento.assistance,
+                    attendance: evento.assistance,
+                    capacity: evento.capacity,
+                    // Inicializa el total de ingresos de la categoría con el ingreso del primer evento
+                    totalRevenue: evento.price * evento.assistance, 
+                };
+            }
         }
     });
-
+    
     const StatsTable2 = document.getElementById("table-Category2");
     let rows = [];
-
+    let totalRevenue = 0;
     for (const category in categories) {
         const revenue = categories[category].revenue;
-        const attendancePercentage =
-            (categories[category].attendance / categories[category].capacity) * 100;
+        totalRevenue += revenue;
+        const attendancePercentage = (categories[category].attendance / categories[category].capacity) * 100;
         const row = `<tr><td>${category}</td><td>$${revenue.toFixed(2)}</td><td>${attendancePercentage.toFixed(2)}%</td></tr>`;
         rows.push(row);
     }
+    // Muestra las columnas
+    StatsTable2.innerHTML = rows.join("");
+}
 
-    StatsTable2.innerHTML = rows.join(""); // Usar corchetes y join en lugar de paréntesis
-};
-
+// TERCERA TABLA UPCOMING //
+const renderStats3 = (events) => {
+    const categories = {};
+    const currentDate = new Date(); // Obtiene la fecha actual
+    // Agrupa por categoría para calcular ingresos y porcentaje de asistencia
+    events.forEach((evento) => {
+        const eventDate = new Date(evento.date); // Obtiene la fecha del evento
+        if (eventDate > currentDate) { // Compara la fecha del evento con la actual
+            if (evento.category in categories) {
+                // Usa [] para acceder a la propiedad del objeto evento.category
+                categories[evento.category].revenue += evento.price * evento.estimate;
+                categories[evento.category].attendance += evento.estimate;
+                categories[evento.category].capacity += evento.capacity;
+                // Agrega el ingreso de cada evento a la categoría que corresponde
+                categories[evento.category].totalRevenue += evento.price * evento.estimate; 
+            } else {
+                categories[evento.category] = {
+                    revenue: evento.price * evento.estimate,
+                    estimate: evento.estimate,
+                    capacity: evento.capacity,
+                    // Inicializa el total de ingresos de la categoría con el ingreso del primer evento
+                    totalRevenue: evento.price * evento.estimate, 
+                };
+            }
+        }
+    });
+    
+    const StatsTable3 = document.getElementById("table-Category3");
+    let rows = [];
+    let totalRevenue = 0;
+    for (const category in categories) {
+        const revenue = categories[category].revenue;
+        totalRevenue += revenue;
+        const estimatePercentage = (categories[category].estimate / categories[category].capacity) * 100;
+        const row = `
+        <tr><td>${category}</td>
+        <td>$${revenue.toFixed(2)}</td>
+        <td>${estimatePercentage.toFixed(2)}%</td>
+        </tr>`;
+        rows.push(row);
+    }
+    // Muestra las columnas
+    StatsTable3.innerHTML = rows.join("");
+}
