@@ -22,26 +22,32 @@ const renderStats = (events) => {
         eventoPorcentaje.aPercent = (evento.assistance / evento.capacity) * 100;
         return eventoPorcentaje;
     });
-    // Busca el evento con el porcentaje de asistencia más alto y más bajo
-    const { maxEvent, minEvent } = eventsPercentage.reduce((asistencia, evento) => {
+    // Evento con el porcentaje de asistencia más alto y más bajo
+    const { maxEvent, minEvent, maxCapacityEvent } = eventsPercentage.reduce((asistencia, evento) => {
         if (asistencia.maxEvent == null || evento.aPercent > asistencia.maxEvent.aPercent) {
             asistencia.maxEvent = evento;
         }
         if (asistencia.minEvent == null || evento.aPercent < asistencia.minEvent.aPercent) {
             asistencia.minEvent = evento;
         }
+        // Luego compara la capacidad
+        if (asistencia.maxCapacityEvent == null || evento.capacity > asistencia.maxCapacityEvent.capacity) {
+            // Si la capacidad del es mayor actualiza maxCapacityEvent
+            asistencia.maxCapacityEvent = evento;
+        }
         return asistencia;
-    }, { maxEvent: null, minAttendanceEvent: null });
+    }, { maxEvent: null, minEvent: null, maxCapacityEvent: null });
 
     // Muestra en la tabla
     const StatsTable = document.getElementById('table-Category');
     const rows = [
         `<tr><td>${maxEvent.name} - ${maxEvent.aPercent.toFixed(3)}%</td></tr>`, //toFixed para decimales
         `<tr><td>${minEvent.name} - ${minEvent.aPercent.toFixed(3)}%</td></tr>`,
-        `<tr><td>${events.reduce((prev, current) => (prev.capacity > current.capacity) ? prev : current).name} - ${events.reduce((prev, current) => (prev.capacity > current.capacity) ? prev : current).capacity}</td></tr>`
+        `<tr><td>${maxCapacityEvent.name} - ${maxCapacityEvent.capacity}</td></tr>`
     ];
     StatsTable.innerHTML = rows.join('');
 };
+
 
 // SEGUNDA TABLA PAST //
 const renderStats2 = (events) => {
