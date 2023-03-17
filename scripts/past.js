@@ -1,29 +1,13 @@
-fetch('https://mindhub-xj03.onrender.com/api/amazing')
-    .then(response => response.json())
-    .then(data => {
-let currentDate = data.currentDate;
-function filtrarFecha(eventos) {
+function filtrarFecha(data) {
   let eventPast = []
-  for (evento of eventos) {
+  let currentDate = data.currentDate;
+  for (evento of data.events) {
     if (currentDate > evento.date) {
       eventPast.push(evento)
     }
   }
   return eventPast
 }
-
-function filtrarFecha(eventos) {
-  let eventPast = []
-  for (evento of eventos) {
-    if (currentDate > evento.date) {
-      eventPast.push(evento)
-    }
-  }
-  return eventPast
-}
-let categoriasFiltradas = [];
-eventosFiltrados = filtrarFecha(data.events);
-let card = document.getElementById("card-template");
 
 function mostrarCards(arr) {
   const cards = arr.map((x) => {
@@ -49,7 +33,20 @@ function mostrarCards(arr) {
   }).join('');
   card.innerHTML = cards
 }
-mostrarCards(eventosFiltrados)
+
+let eventosFiltrados = []
+
+fetch('https://mindhub-xj03.onrender.com/api/amazing')
+  .then(response => response.json())
+  .then(data => {
+  eventosFiltrados = filtrarFecha(data)
+  mostrarCards(eventosFiltrados)
+  mostrarCategory(eventosFiltrados)
+  filtros()
+  })
+
+let categoriasFiltradas = [];
+let card = document.getElementById("card-template");
 
 //BUSQUEDA
 const searchInput = document.getElementById('search');
@@ -85,13 +82,14 @@ searchInput.addEventListener('keypress', (e) => {
     filterCards()
   }
 });
-let categoria = document.getElementById("categoria");
+let contenedorCategoria = document.getElementById("categoria");
 
 //CATEGORIA
 const categoriasUnicas = {};
 const categoriasHTML = [];
 
-data.events.forEach((evento) => {
+function mostrarCategory(events){
+events.forEach((evento) => {
   const categoria = evento.category;
   if (!categoriasUnicas[categoria]) {
     categoriasUnicas[categoria] = true;
@@ -104,14 +102,17 @@ data.events.forEach((evento) => {
     );
   }
 });
-categoria.innerHTML = categoriasHTML.join("");
+contenedorCategoria.innerHTML = categoriasHTML.join("");
+}
 
 //CHECKBOX
+function filtros(){
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 let categoriasSeleccionadas = [];
 
 checkboxes.forEach((checkbox) => {
   checkbox.addEventListener('click', (e) => {
+    console.log(e);
     if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
       categoriasSeleccionadas.push(e.target.value);
     } else if (categoriasSeleccionadas.includes(e.target.value)) {
@@ -120,6 +121,7 @@ checkboxes.forEach((checkbox) => {
     }
     categoriasFiltradas = [];
     categoriasSeleccionadas.forEach(ctg => {
+      console.log(categoriasSeleccionadas);
       eventosFiltrados.forEach(evento => {
         if (evento.category === ctg) {
           categoriasFiltradas.push(evento);
@@ -127,11 +129,11 @@ checkboxes.forEach((checkbox) => {
       });
     });
     if (categoriasFiltradas.length > 0) {
+      console.log(categoriasFiltradas);
       mostrarCards(categoriasFiltradas);
     } else {
       mostrarCards(eventosFiltrados);
     } if (searchInput.value !== '') filterCards()
   });
 });
-
-})
+}

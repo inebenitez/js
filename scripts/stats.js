@@ -14,20 +14,23 @@ traerData();
 // PRIMER TABLA ASISTENCIA//
 const renderStats = (events) => {
     // Eventos con el porcentaje de asistencia calculado.
-    const eventsPercentage = events.map((evento) => {
-        return { // Crea copia del objeto para agregar una propiedad sin modificarlo
-            ...evento, aPercent: (evento.assistance / evento.capacity) * 100,
-        };
+    const eventsPercentage = events.map(function(evento) {
+        const eventoPorcentaje = {};
+        for (let copyEvent in evento) {
+            eventoPorcentaje[copyEvent] = evento[copyEvent];
+        }
+        eventoPorcentaje.aPercent = (evento.assistance / evento.capacity) * 100;
+        return eventoPorcentaje;
     });
     // Busca el evento con el porcentaje de asistencia más alto y más bajo
-    const { maxEvent, minEvent } = eventsPercentage.reduce((acc, evento) => {
-        if (acc.maxEvent == null || evento.aPercent > acc.maxEvent.aPercent) {
-            acc.maxEvent = evento;
+    const { maxEvent, minEvent } = eventsPercentage.reduce((asistencia, evento) => {
+        if (asistencia.maxEvent == null || evento.aPercent > asistencia.maxEvent.aPercent) {
+            asistencia.maxEvent = evento;
         }
-        if (acc.minEvent == null || evento.aPercent < acc.minEvent.aPercent) {
-            acc.minEvent = evento;
+        if (asistencia.minEvent == null || evento.aPercent < asistencia.minEvent.aPercent) {
+            asistencia.minEvent = evento;
         }
-        return acc;
+        return asistencia;
     }, { maxEvent: null, minAttendanceEvent: null });
 
     // Muestra en la tabla
@@ -68,7 +71,7 @@ const renderStats2 = (events) => {
     });
     
     const StatsTable2 = document.getElementById("table-Category2");
-    let rows = [];
+    let rows = ['<tr><td>Categories</td> <td>Revenues</td><td>Percentage of attendance</td></tr>'];
     let totalRevenue = 0;
     for (const category in categories) {
         const revenue = categories[category].revenue;
@@ -92,7 +95,7 @@ const renderStats3 = (events) => {
             if (evento.category in categories) {
                 // Usa [] para acceder a la propiedad del objeto evento.category
                 categories[evento.category].revenue += evento.price * evento.estimate;
-                categories[evento.category].attendance += evento.estimate;
+                categories[evento.category].estimate += evento.estimate;
                 categories[evento.category].capacity += evento.capacity;
                 // Agrega el ingreso de cada evento a la categoría que corresponde
                 categories[evento.category].totalRevenue += evento.price * evento.estimate; 
@@ -109,7 +112,7 @@ const renderStats3 = (events) => {
     });
     
     const StatsTable3 = document.getElementById("table-Category3");
-    let rows = [];
+    let rows = ['<tr><td>Categories</td> <td>Revenues</td><td>Percentage of attendance</td></tr>'];
     let totalRevenue = 0;
     for (const category in categories) {
         const revenue = categories[category].revenue;
