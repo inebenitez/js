@@ -112,7 +112,6 @@ let categoriasSeleccionadas = [];
 
 checkboxes.forEach((checkbox) => {
   checkbox.addEventListener('click', (e) => {
-    console.log(e);
     if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
       categoriasSeleccionadas.push(e.target.value);
     } else if (categoriasSeleccionadas.includes(e.target.value)) {
@@ -121,7 +120,6 @@ checkboxes.forEach((checkbox) => {
     }
     categoriasFiltradas = [];
     categoriasSeleccionadas.forEach(ctg => {
-      console.log(categoriasSeleccionadas);
       eventosFiltrados.forEach(evento => {
         if (evento.category === ctg) {
           categoriasFiltradas.push(evento);
@@ -129,7 +127,6 @@ checkboxes.forEach((checkbox) => {
       });
     });
     if (categoriasFiltradas.length > 0) {
-      console.log(categoriasFiltradas);
       mostrarCards(categoriasFiltradas);
     } else {
       mostrarCards(eventosFiltrados);

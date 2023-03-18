@@ -1,17 +1,13 @@
-let currentDate = data.currentDate
-
-function filtrarFecha(eventos) {
+function filtrarFecha(data) {
   let eventNext = []
-  for (evento of eventos) {
+  let currentDate = data.currentDate;
+  for (evento of data.events) {
     if (currentDate < evento.date) {
       eventNext.push(evento)
     }
   }
   return eventNext
 }
-let categoriasFiltradas = [];
-eventosFiltrados = filtrarFecha(data.events);
-let card = document.getElementById("card-template");
 
 function mostrarCards(arr) {
   const cards = arr.map((x) => {
@@ -37,7 +33,20 @@ function mostrarCards(arr) {
   }).join('');
   card.innerHTML = cards
 }
-mostrarCards(eventosFiltrados)
+
+let eventosFiltrados = []
+
+fetch('https://mindhub-xj03.onrender.com/api/amazing')
+  .then(response => response.json())
+  .then(data => {
+  eventosFiltrados = filtrarFecha(data)
+  mostrarCards(eventosFiltrados)
+  mostrarCategory(eventosFiltrados)
+  filtros()
+  })
+
+let categoriasFiltradas = [];
+let card = document.getElementById("card-template");
 
 //BUSQUEDA
 const searchInput = document.getElementById('search');
@@ -59,7 +68,7 @@ function filterCards() {
   });
   if (count === 0) {
     const results =
-    `<div class='contenedor p-5 fs-4'><span>No se encontaron resultados</span></div>`
+      `<div class='contenedor p-5 fs-4'><span>No se encontaron resultados</span></div>`
     card.innerHTML = results;
   }
 }
@@ -73,13 +82,14 @@ searchInput.addEventListener('keypress', (e) => {
     filterCards()
   }
 });
-let categoria = document.getElementById("categoria");
+let contenedorCategoria = document.getElementById("categoria");
 
 //CATEGORIA
 const categoriasUnicas = {};
 const categoriasHTML = [];
 
-data.events.forEach((evento) => {
+function mostrarCategory(events){
+events.forEach((evento) => {
   const categoria = evento.category;
   if (!categoriasUnicas[categoria]) {
     categoriasUnicas[categoria] = true;
@@ -92,33 +102,35 @@ data.events.forEach((evento) => {
     );
   }
 });
-categoria.innerHTML = categoriasHTML.join("");
+contenedorCategoria.innerHTML = categoriasHTML.join("");
+}
 
 //CHECKBOX
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-let categoriasSeleccionadas = [];
-
-checkboxes.forEach((checkbox) => {
-  checkbox.addEventListener('click', (e) => {
-    if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
-      categoriasSeleccionadas.push(e.target.value);
-    } else if (categoriasSeleccionadas.includes(e.target.value)) {
-      const catIndex = categoriasSeleccionadas.findIndex(cat => cat === e.target.value);
-      categoriasSeleccionadas.splice(catIndex, 1);
-    }
-    categoriasFiltradas = [];
-    categoriasSeleccionadas.forEach(ctg => {
-      eventosFiltrados.forEach(evento => {
-        if (evento.category === ctg) {
-          categoriasFiltradas.push(evento);
-        }
+function filtros(){
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  let categoriasSeleccionadas = [];
+  
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('click', (e) => {
+      if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
+        categoriasSeleccionadas.push(e.target.value);
+      } else if (categoriasSeleccionadas.includes(e.target.value)) {
+        const catIndex = categoriasSeleccionadas.findIndex(cat => cat === e.target.value);
+        categoriasSeleccionadas.splice(catIndex, 1);
+      }
+      categoriasFiltradas = [];
+      categoriasSeleccionadas.forEach(ctg => {
+        eventosFiltrados.forEach(evento => {
+          if (evento.category === ctg) {
+            categoriasFiltradas.push(evento);
+          }
+        });
       });
+      if (categoriasFiltradas.length > 0) {
+        mostrarCards(categoriasFiltradas);
+      } else {
+        mostrarCards(eventosFiltrados);
+      } if (searchInput.value !== '') filterCards()
     });
-    if (categoriasFiltradas.length > 0) {
-      mostrarCards(categoriasFiltradas);
-    } else {
-      mostrarCards(eventosFiltrados);
-    } if (searchInput.value !== '') filterCards()
   });
-});
-
+  }
