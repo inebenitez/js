@@ -25,7 +25,7 @@ function mostrarCards(arr) {
   </div>
   <div class="card-footer d-flex justify-content-between">
     <span p-1>Price: $${x.price}</span>
-    <a href="/details.html?id=${x._id}" class="btn btn-primary btn-dark align-self-end mt-auto stretched-link">Ver mas</a>
+    <a href="./details.html?id=${x._id}" class="btn btn-primary btn-dark align-self-end mt-auto stretched-link">Ver mas</a>
   </div>
 </div>
 </div>
@@ -94,7 +94,7 @@ events.forEach((evento) => {
   if (!categoriasUnicas[categoria]) {
     categoriasUnicas[categoria] = true;
     categoriasHTML.push(
-      `<div class="input-group-text">
+      `<div class="form-ckeck">
         <label class="checkbox-inline">
           <input type="checkbox" id="${evento._id}" value="${evento.category}"> ${categoria}
         </label>

@@ -25,7 +25,7 @@ function mostrarCards(arr) {
   </div>
   <div class="card-footer d-flex justify-content-between">
     <span p-1>Price: $${x.price}</span>
-    <a href="/details.html?id=${x._id}" class="btn btn-primary btn-dark align-self-end mt-auto stretched-link">Ver mas</a>
+    <a href="./details.html?id=${x._id}" class="btn btn-primary btn-dark align-self-end mt-auto stretched-link">Ver mas</a>
   </div>
 </div>
 </div>
@@ -43,8 +43,8 @@ fetch('https://mindhub-xj03.onrender.com/api/amazing')
   mostrarCards(eventosFiltrados)
   mostrarCategory(eventosFiltrados)
   filtros()
-  })
-
+  });
+  
 let categoriasFiltradas = [];
 let card = document.getElementById("card-template");
 
@@ -94,7 +94,7 @@ events.forEach((evento) => {
   if (!categoriasUnicas[categoria]) {
     categoriasUnicas[categoria] = true;
     categoriasHTML.push(
-      `<div class="input-group-text">
+      `<div class="form-check">
         <label class="checkbox-inline">
           <input type="checkbox" id="${evento._id}" value="${evento.category}"> ${categoria}
         </label>
@@ -107,30 +107,30 @@ contenedorCategoria.innerHTML = categoriasHTML.join("");
 
 //CHECKBOX
 function filtros(){
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-  let categoriasSeleccionadas = [];
-  
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener('click', (e) => {
-      if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
-        categoriasSeleccionadas.push(e.target.value);
-      } else if (categoriasSeleccionadas.includes(e.target.value)) {
-        const catIndex = categoriasSeleccionadas.findIndex(cat => cat === e.target.value);
-        categoriasSeleccionadas.splice(catIndex, 1);
-      }
-      categoriasFiltradas = [];
-      categoriasSeleccionadas.forEach(ctg => {
-        eventosFiltrados.forEach(evento => {
-          if (evento.category === ctg) {
-            categoriasFiltradas.push(evento);
-          }
-        });
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+let categoriasSeleccionadas = [];
+
+checkboxes.forEach((checkbox) => {
+  checkbox.addEventListener('click', (e) => {
+    if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
+      categoriasSeleccionadas.push(e.target.value);
+    } else if (categoriasSeleccionadas.includes(e.target.value)) {
+      const catIndex = categoriasSeleccionadas.findIndex(cat => cat === e.target.value);
+      categoriasSeleccionadas.splice(catIndex, 1);
+    }
+    categoriasFiltradas = [];
+    categoriasSeleccionadas.forEach(ctg => {
+      eventosFiltrados.forEach(evento => {
+        if (evento.category === ctg) {
+          categoriasFiltradas.push(evento);
+        }
       });
-      if (categoriasFiltradas.length > 0) {
-        mostrarCards(categoriasFiltradas);
-      } else {
-        mostrarCards(eventosFiltrados);
-      } if (searchInput.value !== '') filterCards()
     });
+    if (categoriasFiltradas.length > 0) {
+      mostrarCards(categoriasFiltradas);
+    } else {
+      mostrarCards(eventosFiltrados);
+    } if (searchInput.value !== '') filterCards()
   });
-  }
+});
+}
