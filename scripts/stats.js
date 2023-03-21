@@ -8,14 +8,14 @@ const traerData = async () => {
             renderStats2(json.events)
             renderStats3(json.events)
         }
-    );
+        );
 };
 traerData();
 
 // PRIMER TABLA ASISTENCIA//
 const renderStats = (events) => {
     // Eventos con el porcentaje de asistencia calculado.
-    const eventsPercentage = events.map(function(evento) {
+    const eventsPercentage = events.map(function (evento) {
         const eventoPorcentaje = {};
         for (let copyEvent in evento) {
             eventoPorcentaje[copyEvent] = evento[copyEvent];
@@ -24,26 +24,28 @@ const renderStats = (events) => {
         return eventoPorcentaje;
     });
     // Evento con el porcentaje de asistencia más alto y más bajo
-    const { maxEvent, minEvent, maxCapacityEvent } = eventsPercentage.reduce((asistencia, evento) => {
+    // Metodo reduce para devolver un valor acumulado
+    // Usa 3 propiedades inicializadas en null 
+    const { maxEvent, minEvent, maxCapacityEvent } = eventsPercentage.reduce((asistencia, evento) => { // La funcion toma dos parametros para devolver la asistencia 
         if (asistencia.maxEvent == null || evento.aPercent > asistencia.maxEvent.aPercent) {
             asistencia.maxEvent = evento;
         }
         if (asistencia.minEvent == null || evento.aPercent < asistencia.minEvent.aPercent) {
             asistencia.minEvent = evento;
         }
-        // Luego compara la capacidad
+        // Compara la capacidad
         if (asistencia.maxCapacityEvent == null || evento.capacity > asistencia.maxCapacityEvent.capacity) {
-            // Si la capacidad del es mayor actualiza maxCapacityEvent
+            // Si la capacidad es mayor actualiza maxCapacityEvent
             asistencia.maxCapacityEvent = evento;
         }
         return asistencia;
         // Se establece en null
     }, {
-        maxEvent: null, 
+        maxEvent: null,
         minEvent: null,
         maxCapacityEvent: null
     }
-);
+    );
 
     // Muestra en la tabla
     const StatsTable = document.getElementById('table-Category');
@@ -54,7 +56,6 @@ const renderStats = (events) => {
     ];
     StatsTable.innerHTML = rows.join('');
 };
-
 
 // SEGUNDA TABLA PAST //
 const renderStats2 = (events) => {
@@ -70,21 +71,21 @@ const renderStats2 = (events) => {
                 categories[evento.category].attendance += evento.assistance;
                 categories[evento.category].capacity += evento.capacity;
                 // Agrega el ingreso de cada evento a la categoría que corresponde
-                categories[evento.category].totalRevenue += evento.price * evento.assistance; 
+                categories[evento.category].totalRevenue += evento.price * evento.assistance;
             } else {
                 categories[evento.category] = {
                     revenue: evento.price * evento.assistance,
                     attendance: evento.assistance,
                     capacity: evento.capacity,
                     // Inicializa el total de ingresos de la categoría con el ingreso del primer evento
-                    totalRevenue: evento.price * evento.assistance, 
+                    totalRevenue: evento.price * evento.assistance,
                 };
             }
         }
     });
-    
+
     const StatsTable2 = document.getElementById("table-Category2");
-    let rows = ['<tr><td>Categories</td> <td>Revenues</td><td>Percentage of attendance</td></tr>'];
+    let rows = ['<th class="col-4 text-center">Categories</th><th class="col-4 text-center">Revenues</th><th class="col-4 text-center">Percentage of attendance</th>'];
     let totalRevenue = 0;
     for (const category in categories) {
         const revenue = categories[category].revenue;
@@ -111,21 +112,21 @@ const renderStats3 = (events) => {
                 categories[evento.category].estimate += evento.estimate;
                 categories[evento.category].capacity += evento.capacity;
                 // Agrega el ingreso de cada evento a la categoría que corresponde
-                categories[evento.category].totalRevenue += evento.price * evento.estimate; 
+                categories[evento.category].totalRevenue += evento.price * evento.estimate;
             } else {
                 categories[evento.category] = {
                     revenue: evento.price * evento.estimate,
                     estimate: evento.estimate,
                     capacity: evento.capacity,
                     // Inicializa el total de ingresos de la categoría con el ingreso del primer evento
-                    totalRevenue: evento.price * evento.estimate, 
+                    totalRevenue: evento.price * evento.estimate,
                 };
             }
         }
     });
-    
+
     const StatsTable3 = document.getElementById("table-Category3");
-    let rows = ['<tr><td>Categories</td> <td>Revenues</td><td>Percentage of attendance</td></tr>'];
+    let rows = ['<th class="col-4 text-center">Categories</th><th class="col-4 text-center">Revenues</th><th class="col-4 text-center">Percentage of attendance</th>'];
     let totalRevenue = 0;
     for (const category in categories) {
         const revenue = categories[category].revenue;
