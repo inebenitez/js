@@ -1,3 +1,7 @@
+let card = document.getElementById("card-template");
+
+card.innerHTML = '<div class="cargando row justify-content-center aling-items-center p-5"><p>Cargando...</p></div>';
+
 function filtrarFecha(data) {
   let eventPast = []
   let currentDate = data.currentDate;
@@ -46,7 +50,6 @@ fetch('https://mindhub-xj03.onrender.com/api/amazing')
   })
 
 let categoriasFiltradas = [];
-let card = document.getElementById("card-template");
 
 //BUSQUEDA
 const searchInput = document.getElementById('search');
@@ -94,7 +97,7 @@ events.forEach((evento) => {
   if (!categoriasUnicas[categoria]) {
     categoriasUnicas[categoria] = true;
     categoriasHTML.push(
-      `<div class="form-ckeck">
+      `<div class="form-ckeck p-1">
         <label class="checkbox-inline">
           <input type="checkbox" id="${evento._id}" value="${evento.category}"> ${categoria}
         </label>
@@ -110,14 +113,17 @@ function filtros(){
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 let categoriasSeleccionadas = [];
 
+// Evento de click en los checkboxes
 checkboxes.forEach((checkbox) => {
   checkbox.addEventListener('click', (e) => {
+    // Crea lista de categorías seleccionadas
     if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
       categoriasSeleccionadas.push(e.target.value);
     } else if (categoriasSeleccionadas.includes(e.target.value)) {
       const catIndex = categoriasSeleccionadas.findIndex(cat => cat === e.target.value);
       categoriasSeleccionadas.splice(catIndex, 1);
     }
+    // Filtra los eventos según las categorías seleccionadas
     categoriasFiltradas = [];
     categoriasSeleccionadas.forEach(ctg => {
       eventosFiltrados.forEach(evento => {

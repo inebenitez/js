@@ -1,3 +1,7 @@
+let card = document.getElementById("card-template");
+
+card.innerHTML = '<div class="cargando row justify-content-center aling-items-center p-5"><p>Cargando...</p></div>';
+
 function filtrarFecha(data) {
   let eventNext = []
   let currentDate = data.currentDate;
@@ -43,10 +47,9 @@ fetch('https://mindhub-xj03.onrender.com/api/amazing')
   mostrarCards(eventosFiltrados)
   mostrarCategory(eventosFiltrados)
   filtros()
-  });
+  })
   
 let categoriasFiltradas = [];
-let card = document.getElementById("card-template");
 
 //BUSQUEDA
 const searchInput = document.getElementById('search');

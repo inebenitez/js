@@ -1,10 +1,11 @@
 let parametro = new URLSearchParams(location.search);
+let container = document.querySelector(".tarjeta")
+container.innerHTML = '<div class="cargando row justify-content-center aling-items-center p-4"><p>Cargando...</p></div>';
 
 fetch('https://mindhub-xj03.onrender.com/api/amazing')
     .then(response => response.json())
     .then(data => {
         let evento = data.events.find(evento => evento._id == parametro.get("id"));
-        let container = document.querySelector(".tarjeta")
         container.innerHTML = `<div class="contenido">
     <div class="ladoIzq">
         <img src="${evento.image}" alt="${evento.name}"/>

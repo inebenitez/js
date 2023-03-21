@@ -1,5 +1,7 @@
 let card = document.getElementById("card-template");
 
+card.innerHTML = '<div class="cargando row justify-content-center aling-items-center p-5"><p>Cargando...</p></div>';
+
 function mostrarCards(arr) {
   const cards = arr.map((x) => {
     return `
@@ -24,7 +26,19 @@ function mostrarCards(arr) {
   }).join('');
   card.innerHTML = cards
 }
-mostrarCards(data.events)
+
+let eventosFiltrados = []
+
+fetch('https://mindhub-xj03.onrender.com/api/amazing')
+  .then(response => response.json())
+  .then(data => {
+    eventosFiltrados = data.events;
+    mostrarCards(eventosFiltrados);
+    mostrarCategory(eventosFiltrados);
+    filtros()
+  })
+
+let categoriasFiltradas = [];
 
 //BUSQUEDA
 const searchInput = document.getElementById('search');
@@ -46,7 +60,7 @@ function filterCards() {
   });
   if (count === 0) {
     const results =
-    `<div class='contenedor p-5 fs-4'><span>No se encontaron resultados</span></div>`
+      `<div class='contenedor p-5 fs-4'><span>No se encontaron resultados</span></div>`
     card.innerHTML = results;
   }
 }
@@ -60,57 +74,57 @@ searchInput.addEventListener('keypress', (e) => {
     filterCards()
   }
 });
-let categoria = document.getElementById("categoria");
+let contenedorCategoria = document.getElementById("categoria");
 
 //CATEGORIA
 const categoriasUnicas = {};
 const categoriasHTML = [];
 
-data.events.forEach((evento) => {
-  const categoria = evento.category;
-  if (!categoriasUnicas[categoria]) {
-    categoriasUnicas[categoria] = true;
-    categoriasHTML.push(
-      `<div class="form-ckeck">
+function mostrarCategory(events) {
+  events.forEach((evento) => {
+    const categoria = evento.category;
+    if (!categoriasUnicas[categoria]) {
+      categoriasUnicas[categoria] = true;
+      categoriasHTML.push(
+        `<div class="form-ckeck p-1">
         <label class="checkbox-inline">
           <input type="checkbox" id="${evento._id}" value="${evento.category}"> ${categoria}
         </label>
       </div>`
-    );
-  }
-});
-categoria.innerHTML = categoriasHTML.join("");
-
-//CHECKBOX
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-let categoriasSeleccionadas = [];
-
-// Evento de click en los checkboxes
-checkboxes.forEach((checkbox) => {
-  checkbox.addEventListener('click', (e) => {
-    // Crea lista de categorías seleccionadas
-    if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
-      categoriasSeleccionadas.push(e.target.value);
-    } else if (categoriasSeleccionadas.includes(e.target.value)) {
-      const catIndex = categoriasSeleccionadas.findIndex(cat => cat === e.target.value);
-      categoriasSeleccionadas.splice(catIndex, 1);
+      );
     }
-    console.log(categoriasSeleccionadas);
-    // Filtra los eventos según las categorías seleccionadas
-    let eventosFiltrados = []
-    categoriasSeleccionadas.forEach(ctg => {
-      data.events.forEach(evento => {
-        if (evento.category === ctg) {
-          eventosFiltrados.push(evento)
-          console.log(eventosFiltrados);
-        }
-      })
-    })
-    if (eventosFiltrados.length === 0) {
-      mostrarCards(data.events)
-    } else {
-      mostrarCards(eventosFiltrados)
-    }
-    if (searchInput.value !== '') filterCards()
   });
-});
+  contenedorCategoria.innerHTML = categoriasHTML.join("");
+}
+
+function filtros() {
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  let categoriasSeleccionadas = [];
+
+  // Evento de click en los checkboxes
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('click', (e) => {
+      // Crea lista de categorías seleccionadas
+      if (e.target.checked && !categoriasSeleccionadas.includes(e.target.value)) {
+        categoriasSeleccionadas.push(e.target.value);
+      } else if (categoriasSeleccionadas.includes(e.target.value)) {
+        const catIndex = categoriasSeleccionadas.findIndex(cat => cat === e.target.value);
+        categoriasSeleccionadas.splice(catIndex, 1);
+      }
+      // Filtra los eventos según las categorías seleccionadas
+      categoriasFiltradas = []
+      categoriasSeleccionadas.forEach(ctg => {
+        eventosFiltrados.forEach(evento => {
+          if (evento.category === ctg) {
+            categoriasFiltradas.push(evento)
+          }
+        })
+      })
+      if (categoriasFiltradas.length === 0) {
+        mostrarCards(eventosFiltrados)
+      } else {
+        mostrarCards(categoriasFiltradas)
+      } if (searchInput.value !== '') filterCards()
+    });
+  });
+}

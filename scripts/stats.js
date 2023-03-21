@@ -7,7 +7,8 @@ const traerData = async () => {
             renderStats(json.events)
             renderStats2(json.events)
             renderStats3(json.events)
-        });
+        }
+    );
 };
 traerData();
 
@@ -36,7 +37,13 @@ const renderStats = (events) => {
             asistencia.maxCapacityEvent = evento;
         }
         return asistencia;
-    }, { maxEvent: null, minEvent: null, maxCapacityEvent: null });
+        // Se establece en null
+    }, {
+        maxEvent: null, 
+        minEvent: null,
+        maxCapacityEvent: null
+    }
+);
 
     // Muestra en la tabla
     const StatsTable = document.getElementById('table-Category');
